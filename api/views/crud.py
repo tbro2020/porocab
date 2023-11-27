@@ -15,7 +15,10 @@ class List(APIView):
         model = apps.get_model(app, model_name=model)
         serializer = model_serializer_factory(model)
 
-        qs = model.objects.all()
+        query = request.GET.dict()
+        query = {key: request.GET.getlist(key) if '__in' in key else value for key, value in query.items()}
+
+        qs = model.objects.filter(**query)
         serialized = serializer(qs, many=True)
 
         #meta = self.metadata_class()
@@ -28,7 +31,7 @@ class Create(APIView):
 
     def post(self, request, app, model):
         model = apps.get_model(app, model_name=model)
-        serializer = model_serializer_factory(model, depth=0)
+        serializer = model_serializer_factory(model)
         print(request.data)
         
         serialized = serializer(data=request.data)
@@ -57,12 +60,29 @@ class Detail(APIView):
         #data = meta.get_serializer_info(serialized)
         return Response({'status': 'success', 'data': serialized.data})
     
-    def put(self, request, app, model, pk):
+    def patch(self, request, app, model, pk):
         model = apps.get_model(app, model_name=model)
         serializer = model_serializer_factory(model, depth=0)
 
         obj = get_object_or_404(model, pk=pk)
         serialized = serializer(obj, data=request.data, partial=True)
+        if not serialized.is_valid():
+            return Response({'status': 'unsuccessful', 'data': serialized.errors}, status=status.HTTP_400_BAD_REQUEST)
+        serialized.save()
+        
+        #meta = self.metadata_class()
+        #data = meta.get_serializer_info(serialized)
+
+        serializer = model_serializer_factory(model)
+        serialized = serializer(serialized.instance)
+        return Response({'status': 'success', 'data': serialized.data})
+    
+    def put(self, request, app, model, pk):
+        model = apps.get_model(app, model_name=model)
+        serializer = model_serializer_factory(model, depth=0)
+
+        obj = get_object_or_404(model, pk=pk)
+        serialized = serializer(obj, data=request.data)
         if not serialized.is_valid():
             return Response({'status': 'unsuccessful', 'data': serialized.errors}, status=status.HTTP_400_BAD_REQUEST)
         serialized.save()

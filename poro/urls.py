@@ -16,16 +16,16 @@ Including another URLconf
 """
 from notifications import urls
 from django.contrib import admin
-from django.urls import path, include
 
 from django.conf import settings
+from django.urls import path, include
 
 urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
     path('', include('django.contrib.auth.urls')),
     
     path('', include('core.urls')),
-    path('api/', include('api.urls')),
+    path('api/v1/', include('api.urls')),
     path('notifications', include(urls, namespace='notifications')),
 ]
 

@@ -9,7 +9,7 @@ from service.models import Ride
 from core.models import User
 
 @receiver(signals.post_save, sender=Ride)
-def post_saved(sender, instance, created, **kwargs):
+def post_save_ride(sender, instance, created, **kwargs):
     serializer = model_serializer_factory(instance._meta.model)
     serialized = serializer(instance, many=False)
 
@@ -21,10 +21,8 @@ def post_saved(sender, instance, created, **kwargs):
         }
     )
 
-    if not instance.current_location: return
-    users = [instance.client, instance.driver]
-    users = [user.id for user in users if user]
-    User.objects.filter(id__in=users).update(**{
-        'last_known_position': instance.current_location
-    })
+    #if not instance.current_location: return
+    #users = [instance.client, instance.driver]
+    #users = [user.id for user in users if user]
+    #ser.objects.filter(id__in=users).update(**{'last_known_position': instance.current_location})
 

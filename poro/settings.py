@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_filters',
     'rest_framework',
+    'rest_framework.authtoken',
     'crispy_bootstrap5',
     'django_json_widget',
 
@@ -217,7 +218,10 @@ CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", 'redis://localhost:63
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 # TinyMCE settings
@@ -431,3 +435,15 @@ if not DEBUG:
             },
         },
     }
+
+# Django money settings
+DEFAULT_CURRENCY = 'CDF'
+
+CURRENCY_CHOICES = [
+    ('USD', 'USD'),
+    ('CDF', 'CDF'),
+]
+
+# Ride settings
+PRICE_PER_MINUTE = 350
+PRICE_PER_MINUTE = int(os.getenv('PRICE_PER_MINUTE', PRICE_PER_MINUTE))

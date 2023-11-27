@@ -14,12 +14,14 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    username = None
+    username, email = None, None
     
     last_known_position = PointField(verbose_name=_('dernière localisation connue'), blank=True, null=True, default=None)
-    mobile_number = PhoneNumberField(_('numéro de téléphone mobile'), unique=True, null=True, default=None)
+    proof_of_id = models.FileField('preuve d\'identité', upload_to='proof_of_id/')
+
     date_joined = models.DateTimeField(_('date d\'inscription'), default=timezone.now)
-    password = models.CharField(_('mot de passe'), max_length=128, blank=True)
+    mobile_number = PhoneNumberField(_('numéro de téléphone mobile'), unique=True)
+    password = models.CharField(_('mot de passe'), max_length=128)
 
     USERNAME_FIELD = 'mobile_number'
     REQUIRED_FIELDS = []
@@ -31,18 +33,19 @@ class User(AbstractUser):
     
     layout = Layout(
         Row(
-            Column('first_name'),
-            Column('last_name')
+            Column('proof_of_id', css_class='form-group col-md-4'),
+            Column('first_name', css_class='form-group col-md-4'),
+            Column('last_name', css_class='form-group col-md-4')
         ),
         'mobile_number',
         Row(
-            Column('user_permissions'),
-            Column('groups')
+            Column('user_permissions', css_class='form-group col-md-6'),
+            Column('groups', css_class='form-group col-md-6')
         ),
         Row(
-            Column('is_staff'),
-            Column('is_active'),
-            Column('is_superuser')
+            Column('is_superuser', css_class='form-group col-md-4'),
+            Column('is_active', css_class='form-group col-md-4'),
+            Column('is_staff', css_class='form-group col-md-4')
         )
     )
 

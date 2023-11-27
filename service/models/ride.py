@@ -6,21 +6,22 @@ from core.models.fields import ModelSelect
 from django.db import models
 from core.models import Base
 
-class RideChoices(models.TextChoices):
-    CREATED = 'CREATED', 'CREATED'
+class RideStatus(models.TextChoices):
+    PENDING = 'pending', _('pending')
+    ACCEPTED = 'accepted', _('accepted')
+    STARTED = 'started', _('started')
+    COMPLETED = 'completed', _('completed')
+    CANCELLED = 'cancelled', _('cancelled')
+    FAILED = 'failed', _('failed')
+
 
 class Ride(Base):
-    driver = ModelSelect('core.user', verbose_name=_('chauffeur'), on_delete=models.SET_NULL, null=True, default=None, related_name='%(app_label)s_%(class)s_client')
-    client = ModelSelect('core.user', verbose_name=_('client'), on_delete=models.SET_NULL, null=True, default=None, related_name='%(app_label)s_%(class)s_driver')
-
-    drop_off_location = PointField(verbose_name=_('drop off'), blank=True, null=True, default=None)
-    pick_up_location = PointField(verbose_name=_('pick up'), blank=True, null=True, default=None)
-    current_location = PointField(verbose_name=_('current'), blank=True, null=True, default=None)
+    driver = ModelSelect('core.user', verbose_name=_('chauffeur'), on_delete=models.SET_NULL, null=True, default=None, related_name='%(app_label)s_%(class)s_driver')
+    client = ModelSelect('core.user', verbose_name=_('client'), on_delete=models.SET_NULL, null=True, related_name='%(app_label)s_%(class)s_client')
+    status = models.CharField(verbose_name=_('status'), max_length=20, default=RideStatus.PENDING, choices=RideStatus.choices)
 
     cost = MoneyField(default=0, max_digits=14, decimal_places=2, default_currency='USD')
     paid = MoneyField(default=0, max_digits=14, decimal_places=2, default_currency='USD')
-
-    status = models.CharField(verbose_name=_('status'), max_length=10, default='CREATED', choices=RideChoices.choices)
 
     list_display = ('id', 'client', 'driver', 'cost', 'paid')
     list_filter = ('status', )
@@ -29,10 +30,10 @@ class Ride(Base):
             Column('client'),
             Column('driver')
         ),
-        Row(
-            Column('pick_up'),
-            Column('drop_off'),
-        ),
+        #Row(
+        #    Column('pick_up'),
+        #    Column('drop_off'),
+        #),
         Row(
             Column('cost'),
             Column('paid'),
