@@ -14,6 +14,7 @@ class RideStatus(models.TextChoices):
     COMPLETED = 'completed', _('completed')
     CANCELLED = 'cancelled', _('cancelled')
     FAILED = 'failed', _('failed')
+    ENDED = 'ended', _('ended')
 
 
 class Ride(Base):
