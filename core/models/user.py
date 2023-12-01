@@ -16,10 +16,10 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     username, email = None, None
     
-    last_known_position = PointField(verbose_name=_('dernière localisation connue'), blank=True, null=True, default=None)
-    proof_of_id = models.FileField('preuve d\'identité', upload_to='proof_of_id/')
-
+    #last_known_position = PointField(verbose_name=_('dernière localisation connue'), blank=True, null=True, default=None)
+    
     date_joined = models.DateTimeField(_('date d\'inscription'), default=timezone.now)
+    proof_of_id = models.FileField('preuve d\'identité', upload_to='proof_of_id/')
     mobile_number = PhoneNumberField(_('numéro de téléphone mobile'), unique=True)
     password = models.CharField(_('mot de passe'), max_length=128)
 

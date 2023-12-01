@@ -8,7 +8,7 @@ from core.models import Base
 
 class Invoice(Base):
     pick_up_location = PointField(_('lieu de ramassage'), null=True, blank=True, editable=False)
-    pick_up_location_name = models.CharField(_('nom du lieu de ramassage'), max_length=255)
+    pick_up_address = models.CharField(_('nom du lieu de ramassage'), max_length=255)
     # To-Do make this field widget auto-complete according to google list of places
 
     duration_in_minutes = models.PositiveIntegerField(_('duree en minute'), null=True, blank=True)

@@ -1,3 +1,4 @@
+from api.serializers import model_serializer_factory
 from django.contrib.gis.db.models import PointField
 from crispy_forms.layout import Layout, Row, Column
 from django.utils.translation import gettext as _
@@ -17,24 +18,29 @@ class RideStatus(models.TextChoices):
 
 class Ride(Base):
     driver = ModelSelect('core.user', verbose_name=_('chauffeur'), on_delete=models.SET_NULL, null=True, default=None, related_name='%(app_label)s_%(class)s_driver')
-    client = ModelSelect('core.user', verbose_name=_('client'), on_delete=models.SET_NULL, null=True, related_name='%(app_label)s_%(class)s_client')
+    passenger = ModelSelect('core.user', verbose_name=_('passenger'), on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_passenger')
     status = models.CharField(verbose_name=_('status'), max_length=20, default=RideStatus.PENDING, choices=RideStatus.choices)
 
-    cost = MoneyField(default=0, max_digits=14, decimal_places=2, default_currency='USD')
-    paid = MoneyField(default=0, max_digits=14, decimal_places=2, default_currency='USD')
+    pick_up_address = models.CharField(_('nom du lieu de ramassage'), max_length=255)
+    pick_up_location = PointField(_('lieu de ramassage'), null=True)
 
-    list_display = ('id', 'client', 'driver', 'cost', 'paid')
+    duration_in_minutes = models.PositiveIntegerField(verbose_name=_('duration'), default=0)
+    cost = MoneyField(max_digits=14, decimal_places=2, default=0)
+    paid = MoneyField(max_digits=14, decimal_places=2, default=0)
+
+    rating = models.PositiveIntegerField(verbose_name=_('rating'), default=0)
+    review = models.TextField(verbose_name=_('review'), blank=True, null=True, default=None)
+
+    list_display = ('id', 'passenger', 'driver', 'cost', 'paid', 'status')
     list_filter = ('status', )
     layout = Layout(
         Row(
-            Column('client'),
+            Column('passenger'),
             Column('driver')
         ),
-        #Row(
-        #    Column('pick_up'),
-        #    Column('drop_off'),
-        #),
+        'pick_up_address',
         Row(
+            Column('duration_in_minutes'),
             Column('cost'),
             Column('paid'),
         ),
@@ -42,9 +48,16 @@ class Ride(Base):
     )
     _layout = layout
 
+    @property
     def name(self):
-        return '#{} of {} on {}'.format(self.id, self.client, self.status)
+        return '#{} of {} on {}'.format(self.id, self.passenger, self.status)
+    
+    @property
+    def serialized(self):
+        serializer = model_serializer_factory(self._meta.model)
+        return serializer(self, many=False).data
 
     class Meta:
         verbose_name = _('course')
         verbose_name_plural = _('courses')
+        ordering = ('-updated_at', '-created_at')

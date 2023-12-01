@@ -31,11 +31,11 @@ class Create(APIView):
 
     def post(self, request, app, model):
         model = apps.get_model(app, model_name=model)
-        serializer = model_serializer_factory(model)
-        print(request.data)
+        serializer = model_serializer_factory(model, depth=0)
         
         serialized = serializer(data=request.data)
         if not serialized.is_valid():
+            print(serialized.errors)
             return Response({'status': 'unsuccessful', 'data': serialized.errors}, status=status.HTTP_400_BAD_REQUEST)
         serialized.save()
 

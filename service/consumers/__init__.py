@@ -1,2 +1,1 @@
-from .drivers import Drivers
-from .ride import Ride
+from .ride import RideConsumer

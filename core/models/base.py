@@ -37,3 +37,4 @@ class Base(models.Model):
     
     class Meta:
         abstract = True
+        ordering = ('-updated_at', '-created_at')

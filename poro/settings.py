@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django.contrib.gis',
 
     'dal',
     'dal_select2',
@@ -80,7 +81,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_currentuser.middleware.ThreadLocalUserMiddleware'
+    'django_currentuser.middleware.ThreadLocalUserMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'poro.urls'
@@ -294,7 +296,6 @@ CHANNEL_LAYERS = {
             "hosts": [('localhost', 6379)],
         },
     },
-    
 }
 
 # DEBUG MODE
