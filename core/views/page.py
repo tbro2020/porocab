@@ -1,12 +1,11 @@
-from django.shortcuts import redirect, get_object_or_404, render
+from django.shortcuts import get_object_or_404, render
 from django.utils.translation import gettext as _
-from django.contrib import messages
 
 from django.template import Context, Template
-from core.views import BaseView
+from django.views import View
 from django.apps import apps
 
-class Page(BaseView):
+class Page(View):
     action = ["view"]
 
     def get(self, request, slug):
