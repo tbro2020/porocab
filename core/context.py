@@ -59,6 +59,10 @@ def base(request):
             'href': reverse_lazy('core:list', kwargs={'app': 'core', 'model': 'template'}),
             'permission': 'core.view_template'
         }, {
+            'title': _('Page'),
+            'href': reverse_lazy('core:list', kwargs={'app': 'core', 'model': 'page'}),
+            'permission': 'core.change_page'
+        }, {
             'title': _('Préférences'),
             'href': reverse_lazy('core:list', kwargs={'app': 'core', 'model': 'preference'}),
             'permission': 'core.view_preference'

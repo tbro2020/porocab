@@ -122,8 +122,9 @@ if os.getenv('DATABASE_URL', None):
     DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
 
 # Spatial settings
-SPATIALITE_LIBRARY_PATH = 'mod_spatialite.so'
+#SPATIALITE_LIBRARY_PATH = 'mod_spatialite.so'
 #SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
+SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
 
 print('DATABASES:', DATABASES.get('default', {}).get('ENGINE'))
 

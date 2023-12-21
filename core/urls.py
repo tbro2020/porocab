@@ -5,7 +5,9 @@ from core.views import *
 app_name = 'core'
 
 urlpatterns = [
-    path('', Home.as_view(), name='home'),
+    path('home', Home.as_view(), name='home'),
+    path('', Landing.as_view(), name='landing'),
+    path('page/<str:slug>', Page.as_view(), name='page'),
     path('password/change', PasswordChange.as_view(), name='password-change'),
     
     path('list/<str:app>/<str:model>', List.as_view(), name='list'),

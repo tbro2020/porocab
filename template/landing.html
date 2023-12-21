@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <title>{{ organization.name|default:'Poro' }}</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="PoroCab VTC en RDC">
+      <link rel="stylesheet" href="{% static 'assets/css/main/app.css' %}">
+      <style>
+        body{
+            height: 100%;
+            background: url("{% static 'assets/images/landing.jpg' %}") no-repeat center center fixed;
+        }
+        .lady{
+            background: url("{% static 'assets/images/lady.jpg' %}") no-repeat center center;
+            background-size: cover;
+            height: 100vh;
+        }
+        .full-height{
+            height: 100vh;
+        }
+        .mt-25{
+            margin-top: 25%;
+        }
+      </style>
+   </head>
+   <body>
+        <div class="container full-height">
+             <div class="row full-height">
+                <div class="col-md-6 col-xs-12 full-height align-items-center">
+                    <div class="u-container-layout u-valign-middle u-container-layout-1 mt-25">
+                        <img src="{% static 'assets/images/logo/logo.png' %}" alt="PoroCab" width="128">
+                        <h5 class="u-custom-font u-font-pt-sans u-text u-text-palette-5-dark-2 u-text-1">APPELEZ-NOUS À TOUT MOMENT AU:</h5>
+                        <h1 class="u-custom-font u-font-lato u-text u-text-palette-5-dark-2 u-text-2">
+                            821-880-281&nbsp;
+                            <span style="font-size: 1.25rem;">or </span>
+                            <br>850-586-864<br>
+                        </h1>
+                        <a href="tel:+243821880281" class="btn btn-primary btn-lg">Appeler maintenant</a>
+                        <br />
+                        <br />
+                        <a href="https://play.google.com/store/apps/details?id=com.kaditaj.ketch.porocab" target="_blank">
+                            <img src="{% static 'assets/images/google-play-badge.png' %}" alt="PoroCab" width="128">
+                        </a>
+                        
+                        {% comment %}
+                        <br />
+                        <br />
+                        <small>
+                            <a href="https://www.facebook.com/PoroCab-100106758477996" target="_blank">
+                                <img src="{% static 'assets/images/facebook.png' %}" alt="PoroCab" width="32">
+                            </a>
+                            <a href="https://www.instagram.com/porocab/" target="_blank">
+                                <img src="{% static 'assets/images/instagram.png' %}" alt="PoroCab" width="32">
+                            </a>
+                            <a href="https://twitter.com/porocab" target="_blank">
+                                <img src="{% static 'assets/images/twitter.png' %}" alt="PoroCab" width="32">
+                            </a>
+                        </small>
+                        {% endcomment %}
+
+                        <br />
+                        <br />
+                        
+                        <small>
+                            {% for page in pages %}
+                            <a href="{% url 'core:page' page.slug %}" target="_blank">{{ page.title }}</a>
+                                {% if not forloop.last %}|{% endif %}
+                            {% endfor %}
+                        </small>
+
+                    </div>
+                </div>
+                <div class="col-md-6 col-xs-12 lady"></div>
+             </div>
+        </div>
+   </body>
+</html>
