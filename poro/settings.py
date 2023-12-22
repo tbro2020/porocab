@@ -31,7 +31,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', SECRET_KEY)
 DEBUG = int(os.getenv('DEBUG', 1))
 print('DEBUG:', DEBUG)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
 ALLOWED_HOSTS = list(os.getenv('ALLOWED_HOSTS', '*').split(','))
 
 
