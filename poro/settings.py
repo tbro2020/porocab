@@ -329,7 +329,7 @@ if not DEBUG:
     SECURE_SSL_HOST = True
 
     # CORS settings
-    CORS_ORIGIN_ALLOW_ALL = False
+    CORS_ORIGIN_ALLOW_ALL = True
     CORS_ALLOW_CREDENTIALS = True
     CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
     CORS_ORIGIN_WHITELIST = os.getenv("CORS_ORIGIN_WHITELIST", '*').split(',')
