@@ -122,6 +122,7 @@ DATABASES = {
 
 if os.getenv('DATABASE_URL', None):
     DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
+    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 # Spatial settings
 #SPATIALITE_LIBRARY_PATH = 'mod_spatialite.so'
