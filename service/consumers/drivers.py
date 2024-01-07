@@ -1,5 +1,4 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from service.models import Driver
 
 class Drivers(AsyncJsonWebsocketConsumer):
     async def connect(self):
