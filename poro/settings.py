@@ -293,11 +293,12 @@ PHONENUMBER_DEFAULT_FORMAT = 'E164'
 PHONENUMBER_DEFAULT_FORMAT = 'RFC3966'
 
 # Django channels settings
+REDIS_URL="rediss://default:AVNS_AsvnCXrx0trHw_5YSIj@poro-cab-redis-do-user-10254761-0.c.db.ondigitalocean.com:25061"
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(os.getenv("CELERY_BROKER_URL", 'redis://localhost:6379'))],
+            "hosts": [(os.getenv("REDIS_URL", REDIS_URL))],
         },
     },
 }
