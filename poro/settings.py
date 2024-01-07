@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', SECRET_KEY)
 DEBUG = int(os.getenv('DEBUG', 1))
 print('DEBUG:', DEBUG)
 
-ALLOWED_HOSTS = ['poro.kaditaj.com']
+ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://poro.kaditaj.com']
 
 #ALLOWED_HOSTS = list(os.getenv('ALLOWED_HOSTS', '*').split(','))
