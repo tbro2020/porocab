@@ -297,7 +297,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('localhost', 6379)],
+            "hosts": [(os.getenv("CELERY_BROKER_URL", 'redis://localhost:6379'))],
         },
     },
 }
