@@ -11,4 +11,4 @@ class Drivers(AsyncJsonWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def broadcast(self, payload):
-        await self.send_json(payload)
+        await self.send_json(payload.get('payload'))
