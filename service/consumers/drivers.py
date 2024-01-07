@@ -3,8 +3,8 @@ from service.models import Driver
 
 class Drivers(AsyncJsonWebsocketConsumer):
     async def connect(self):
-        locality = self.scope['url_path']['kwargs']['locality']
-        self.room_group_name = 'drivers-of-{}'.format(locality)
+        # locality = self.scope['url_path']['kwargs']['locality']
+        self.room_group_name = 'drivers-of-kinshasa'
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
     

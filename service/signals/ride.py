@@ -13,4 +13,9 @@ def post_save_ride(sender, instance, created, **kwargs):
         'type': 'broadcast',
         'payload': instance.serialized
     })
+    if not created: return
+    async_to_sync(get_channel_layer().group_send)('drivers-of-kinshasa', {
+        'type': 'broadcast',
+        'payload': instance.serialized
+    })
 
