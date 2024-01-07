@@ -3,8 +3,7 @@ from asgiref.sync import async_to_sync
 
 from django.db.models import signals
 from django.dispatch import receiver
-
-from service.models import Ride, RideStatus
+from service.models import Ride
 
 @receiver(signals.post_save, sender=Ride)
 def post_save_ride(sender, instance, created, **kwargs):
