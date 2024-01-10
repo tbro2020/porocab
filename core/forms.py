@@ -79,6 +79,8 @@ import unicodedata
 account_sid = settings.TWILIO_ACCOUNT_SID
 auth_token = settings.TWILIO_AUTH_TOKEN
 
+print(account_sid, auth_token)
+
 client = Client(account_sid, auth_token)
 UserModel = get_user_model()
 
