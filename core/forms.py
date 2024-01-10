@@ -79,6 +79,9 @@ import unicodedata
 account_sid = settings.TWILIO_ACCOUNT_SID
 auth_token = settings.TWILIO_AUTH_TOKEN
 
+account_sid = 'ACc431c38e47547dcde29a80c137d01d49'
+auth_token = 'f88a886cde2b54e3c30341b8058883ee'
+
 print(account_sid, auth_token)
 
 client = Client(account_sid, auth_token)
