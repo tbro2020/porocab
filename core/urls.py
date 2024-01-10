@@ -1,3 +1,5 @@
+from django.contrib.auth.views import PasswordResetView
+from core.forms import PasswordResetForm
 from django.urls import path
 from core.views import *
 
@@ -9,7 +11,8 @@ urlpatterns = [
     path('', Landing.as_view(), name='landing'),
     path('page/<str:slug>', Page.as_view(), name='page'),
     path('password/change', PasswordChange.as_view(), name='password-change'),
-    
+    path("password_reset/", PasswordResetView.as_view(form_class=PasswordResetForm), name="password_reset"),
+
     path('list/<str:app>/<str:model>', List.as_view(), name='list'),
     path('create/<str:app>/<str:model>', Create.as_view(), name='create'),
     path('change/<str:app>/<str:model>/<int:pk>', Change.as_view(), name='change'),

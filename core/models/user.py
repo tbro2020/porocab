@@ -8,10 +8,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from .managers import UserManager
 
-from django.utils.translation import gettext as _
-from django.contrib.gis.db.models import PointField
 from django.contrib.auth.models import AbstractUser
-
+from django.utils.translation import gettext as _
 
 class User(AbstractUser):
     username, email = None, None

@@ -19,13 +19,15 @@ from django.contrib import admin
 
 from django.conf import settings
 from django.urls import path, include
-from django.conf.urls.static import static
+#from django.conf.urls.static import static
+
+from django.contrib import auth
 
 urlpatterns = [
+    path('', include('core.urls')),
     path('tinymce/', include('tinymce.urls')),
     path('', include('django.contrib.auth.urls')),
-    
-    path('', include('core.urls')),
+
     path('api/v1/', include('api.urls')),
     path('notifications', include(urls, namespace='notifications')),
 ]
