@@ -79,21 +79,8 @@ import unicodedata
 account_sid = settings.TWILIO_ACCOUNT_SID
 auth_token = settings.TWILIO_AUTH_TOKEN
 
-print(account_sid, auth_token)
-
 client = Client(account_sid, auth_token)
 UserModel = get_user_model()
-
-def _unicode_ci_compare(s1, s2):
-    """
-    Perform case-insensitive comparison of two identifiers, using the
-    recommended algorithm from Unicode Technical Report 36, section
-    2.11.2(B)(2).
-    """
-    return (
-        unicodedata.normalize("NFKC", s1).casefold()
-        == unicodedata.normalize("NFKC", s2).casefold()
-    )
 
 class PasswordResetForm(forms.PasswordResetForm):
     email = None
@@ -108,7 +95,7 @@ class PasswordResetForm(forms.PasswordResetForm):
     ):
         message = "Please go to the following page and choose a new password:\n\n"
         context['url'] = reverse_lazy('password_reset_confirm', kwargs={'uidb64': context.get('uid'), 'token': context.get('token')})
-        #message += "{protocol}://{domain}{url}".format(**context)
+        message += "{protocol}://{domain}{url}".format(**context)
         message = client.messages.create(body=message, from_=settings.TWILIO_NUMBER, to=to_mobile_number)
 
     def get_users(self, mobile_number):
@@ -133,7 +120,7 @@ class PasswordResetForm(forms.PasswordResetForm):
         domain_override=None,
         subject_template_name="registration/password_reset_subject.txt",
         email_template_name="registration/password_reset_email.html",
-        use_https=True,
+        use_https=False,
         token_generator=default_token_generator,
         from_email=None,
         request=None,
