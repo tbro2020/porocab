@@ -67,7 +67,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from phonenumber_field.formfields import PhoneNumberField
 from django.utils.translation import gettext as _
-from django.contrib.auth import forms
+from django.contrib.auth.forms import PasswordResetForm
 
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -82,7 +82,7 @@ auth_token = settings.TWILIO_AUTH_TOKEN
 client = Client(account_sid, auth_token)
 UserModel = get_user_model()
 
-class PasswordResetForm(forms.PasswordResetForm):
+class PasswordResetForm(PasswordResetForm):
     email = None
     mobile_number = PhoneNumberField(
         label=_('numéro de téléphone mobile')
