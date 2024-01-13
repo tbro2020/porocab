@@ -27,7 +27,7 @@ def drivers(pk):
             'type': 'broadcast', 
             'payload': ride.serialized
         })
-        ride = Ride.objects.get(id=ride)
+        ride = Ride.objects.get(id=pk)
         time.sleep(5)
 
 
