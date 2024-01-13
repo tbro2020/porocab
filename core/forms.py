@@ -112,6 +112,7 @@ class PasswordResetForm(PasswordResetForm):
                 "is_active": True
             }
         )
+        print(active_users)
         return list(active_users)
 
     def save(
