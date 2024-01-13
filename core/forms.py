@@ -74,11 +74,10 @@ from django.utils.encoding import force_bytes
 from django.conf import settings
 from twilio.rest import Client
 
-
 account_sid = settings.TWILIO_ACCOUNT_SID
 auth_token = settings.TWILIO_AUTH_TOKEN
 
-client = Client('ACc431c38e47547dcde29a80c137d01d49', '9cebe9ef8fbff9f59f2e9508cf91d77a')
+client = Client(account_sid, auth_token)
 UserModel = get_user_model()
 
 class PasswordResetForm(PasswordResetForm):
@@ -95,7 +94,7 @@ class PasswordResetForm(PasswordResetForm):
         message = "Please go to the following page and choose a new password:\n\n"
         context['url'] = reverse_lazy('password_reset_confirm', kwargs={'uidb64': context.get('uid'), 'token': context.get('token')})
         message += "{protocol}://{domain}{url}".format(**context)
-        message = client.messages.create(body=message, from_='+18454425618', to=to_mobile_number)
+        message = client.messages.create(body=message, from_=settings.TWILIO_NUMBER, to=to_mobile_number)
 
     def get_users(self, mobile_number):
         """Given an mobile number, return matching user(s) who should receive a reset.
@@ -108,10 +107,10 @@ class PasswordResetForm(PasswordResetForm):
         active_users = UserModel._default_manager.filter(
             **{
                 #"%s__iexact" % mobile_number_field_name: mobile_number.as_e164,
-                mobile_number_field_name: mobile_number
+                mobile_number_field_name: mobile_number,
+                "is_active": True
             }
         )
-        print(active_users)
         return list(active_users)
 
     def save(
