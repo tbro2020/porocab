@@ -67,7 +67,9 @@ class Detail(APIView):
 
         obj = get_object_or_404(model, pk=pk)
 
-        if model._meta.model_name == 'ride' and obj.driver != None and 'driver' in data: del data['driver']
+        if model._meta.model_name == 'ride' and obj.driver != None and obj.driver != request.user:
+            return Response({'status': 'unsuccessful', 'data': 'Ride already acceoted'}, status=status.HTTP_400_BAD_REQUEST)
+
         serialized = serializer(obj, data=data, partial=True)
         if not serialized.is_valid():
             return Response({'status': 'unsuccessful', 'data': serialized.errors}, status=status.HTTP_400_BAD_REQUEST)
