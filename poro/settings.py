@@ -217,9 +217,9 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", True)
 EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", False)
 
 # Celery settings
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", 'redis://127.0.0.1:6379')
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", 'redis://127.0.0.1:6379')
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", 'redis://127.0.0.1:6379')
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 
 # Django Rest Framework settings
