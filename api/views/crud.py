@@ -61,11 +61,14 @@ class Detail(APIView):
         return Response({'status': 'success', 'data': serialized.data})
     
     def patch(self, request, app, model, pk):
+        data = request.data
         model = apps.get_model(app, model_name=model)
         serializer = model_serializer_factory(model, depth=0)
 
         obj = get_object_or_404(model, pk=pk)
-        serialized = serializer(obj, data=request.data, partial=True)
+
+        if model._meta.model_name == 'ride' and obj.driver != None and 'driver' in data: del data['driver']
+        serialized = serializer(obj, data=data, partial=True)
         if not serialized.is_valid():
             return Response({'status': 'unsuccessful', 'data': serialized.errors}, status=status.HTTP_400_BAD_REQUEST)
         serialized.save()
