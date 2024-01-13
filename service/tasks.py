@@ -3,9 +3,9 @@ from asgiref.sync import async_to_sync
 from celery import shared_task
 
 from api.serializers import model_serializer_factory
-from service.models import Driver
+from service.models import Ride
 
-
+"""
 @shared_task(name='drivers')
 def drivers():
     serializer = model_serializer_factory(Driver)
@@ -21,3 +21,4 @@ def drivers():
             'message': serialized.data
         }
     )
+"""
