@@ -20,8 +20,8 @@ def daily():
 
 
 @shared_task
-def drivers(ride):
-    ride = Ride.objects.get(id=ride)
+def drivers(pk):
+    ride = Ride.objects.get(id=pk)
     while ride.status == 'pending':
         async_to_sync(get_channel_layer().group_send)('drivers-of-kinshasa', {
             'type': 'broadcast', 
