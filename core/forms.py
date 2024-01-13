@@ -108,8 +108,7 @@ class PasswordResetForm(PasswordResetForm):
         active_users = UserModel._default_manager.filter(
             **{
                 #"%s__iexact" % mobile_number_field_name: mobile_number.as_e164,
-                mobile_number_field_name: mobile_number,
-                "is_active": True
+                mobile_number_field_name: mobile_number
             }
         )
         print(active_users)
