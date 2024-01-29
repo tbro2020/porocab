@@ -91,7 +91,6 @@ class PasswordResetForm(PasswordResetForm):
         context,
         to_mobile_number,
     ):
-        context['protocol'] = 'https'
         message = "Please go to the following page and choose a new password:\n\n"
         context['url'] = reverse_lazy('password_reset_confirm', kwargs={'uidb64': context.get('uid'), 'token': context.get('token')})
         message += "{protocol}://{domain}{url}".format(**context)
