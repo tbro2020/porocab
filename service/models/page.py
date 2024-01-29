@@ -5,7 +5,7 @@ from autoslug import AutoSlugField
 from django.db import models
 from core.models import Base
 
-from django.apps import apps
+from django.urls import reverse_lazy
 
 
 class Page(Base):
@@ -22,7 +22,12 @@ class Page(Base):
     layout = Layout('title', 'content')
 
     def save(self, *args, **kwargs):
-        self.url = 'https://www.google.com/search?q={}'.format(self.title)
+        self.url = reverse_lazy('core:print', kwargs={
+            'app': 'service',
+            'model': 'page',
+            'pk': self.pk
+        })
+        self.url = "https://poro.kaditaj.com"+self.url
         super().save(*args, **kwargs)
 
     @property
