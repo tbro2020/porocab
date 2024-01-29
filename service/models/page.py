@@ -5,6 +5,8 @@ from autoslug import AutoSlugField
 from django.db import models
 from core.models import Base
 
+from django.apps import apps
+
 
 class Page(Base):
     url = models.URLField(verbose_name=_('url'), null=True, blank=True)
@@ -22,6 +24,10 @@ class Page(Base):
     def save(self, *args, **kwargs):
         self.url = 'https://www.google.com/search?q={}'.format(self.title)
         super().save(*args, **kwargs)
+
+    @property
+    def template(self):
+        return self
 
     class Meta:
         verbose_name = _('page')
