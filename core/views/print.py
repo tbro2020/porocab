@@ -3,10 +3,10 @@ from django.utils.translation import gettext as _
 from django.contrib import messages
 
 from django.template import Context, Template
-from core.views import BaseView
+from django.views import View
 from django.apps import apps
 
-class Print(BaseView):
+class Print(View):
     action = ["view"]
 
     def get(self, request, app, model, pk):
