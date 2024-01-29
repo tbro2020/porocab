@@ -1,5 +1,6 @@
+from crispy_forms.layout import Layout, Row, Column
 from django.utils.translation import gettext as _
-from crispy_forms.layout import Layout
+
 from tinymce.models import HTMLField
 from autoslug import AutoSlugField
 from django.db import models
@@ -19,9 +20,16 @@ class Page(Base):
         return self.title
 
     list_display = ('id', 'title', 'slug', 'url', 'created_at', 'updated_at')
-    layout = Layout('title', 'content')
+    layout = Layout(
+        Row(
+            Column('title'),
+            Column('url')
+        ),
+        'content'
+    )
 
     def save(self, *args, **kwargs):
+        if self.url: super().save(*args, **kwargs)
         self.url = reverse_lazy('core:print', kwargs={
             'app': 'service',
             'model': 'page',
