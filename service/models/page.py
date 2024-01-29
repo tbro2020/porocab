@@ -28,6 +28,7 @@ class Page(Base):
         'content'
     )
 
+    """
     def save(self, *args, **kwargs):
         if self.url: super().save(*args, **kwargs)
         self.url = reverse_lazy('core:print', kwargs={
@@ -37,7 +38,8 @@ class Page(Base):
         })
         self.url = "https://poro.kaditaj.com"+self.url
         super().save(*args, **kwargs)
-
+    """
+        
     @property
     def template(self):
         return self
