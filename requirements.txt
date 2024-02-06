@@ -22,7 +22,7 @@ click-plugins==1.1.1
 click-repl==0.3.0
 constantly==23.10.4
 crispy-bootstrap5==2023.10
-cron-descriptor==1.4.0
+cron_descriptor==1.4.0
 cryptography==41.0.5
 daphne==4.0.0
 deprecation==2.1.0
@@ -61,6 +61,8 @@ ecdsa==0.18.0
 filetype==1.2.0
 frozenlist==1.4.1
 future==0.18.3
+gevent==23.9.1
+greenlet==3.0.3
 hyperlink==21.0.0
 idna==3.4
 incremental==22.10.0
@@ -111,4 +113,5 @@ wcwidth==0.2.9
 whitenoise==6.6.0
 XlsxWriter==3.1.9
 yarl==1.9.4
+zope.event==5.0
 zope.interface==6.1

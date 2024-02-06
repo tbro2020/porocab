@@ -3,17 +3,21 @@ from asgiref.sync import async_to_sync
 
 from django.db.models import signals
 from django.dispatch import receiver
+from service.tasks import drivers
 from service.models import Ride
-from core.tasks import drivers
 
-from djmoney.models.fields import MoneyField
+
 from django.conf import settings
 from djmoney.money import Money
 
+from core.models import Preference
 
 @receiver(signals.pre_save, sender=Ride)
 def pre_save_ride(sender, instance, **kwargs):
-    price = instance.duration_in_minutes*settings.PRICE_PER_MINUTE
+    price = Preference.get('PRICE_PER_MINUTE')
+    price = float(getattr(price, 'value', settings.PRICE_PER_MINUTE))
+    
+    price = instance.duration_in_minutes*price
     price = Money(price, settings.DEFAULT_CURRENCY)
     instance.cost = price
 
@@ -23,9 +27,8 @@ def post_save_ride(sender, instance, created, **kwargs):
         'type': 'broadcast',
         'payload': instance.serialized
     })
+    
     if not created and instance.status != 'pending': return
-
-    # run task async
     drivers.delay(instance.id)
         
 

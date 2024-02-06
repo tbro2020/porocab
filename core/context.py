@@ -37,14 +37,6 @@ def base(request):
         'forced': True,
         'badge': request.user.notifications.unread().count()
     }))
-
-    menu.insert(2, dict({
-        'title': _('Action requise'),
-        'href': reverse_lazy('core:action-required'),
-        'icon': 'bi-lightning-fill',
-        'forced': True,
-        'badge': action_required(request).get('action_required_count', 0)
-    }))
     
     menu.insert(len(menu), dict({
         'title': _('Paramètres'),
@@ -102,7 +94,3 @@ def base(request):
         }]
     }))
     return {'menus': menu, 'organization': Organization.objects.first()}
-
-def action_required(request):
-    if not request.user.is_authenticated: return {}
-    return {'action_required_count': Approbation.objects.filter(user=request.user, action__isnull=True).count()}

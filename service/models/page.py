@@ -45,5 +45,5 @@ class Page(Base):
         return self
 
     class Meta:
-        verbose_name = _('page')
-        verbose_name_plural = _('pages')
+        verbose_name = _('app page')
+        verbose_name_plural = _('app pages')

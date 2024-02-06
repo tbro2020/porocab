@@ -156,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'fr-cd'
+LANGUAGE_CODE = 'fr'
 
 TIME_ZONE = 'UTC'
 
@@ -300,10 +300,11 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(os.getenv("REDIS_URL", REDIS_URL))],
+            "hosts": [(os.getenv("REDIS_URL", REDIS_URL))]
         },
     },
 }
+print(os.getenv("REDIS_URL", REDIS_URL))
 
 # DEBUG MODE
 if DEBUG:

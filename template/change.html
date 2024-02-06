@@ -33,8 +33,8 @@
                         <a href="{% url 'core:approbation' 'rejected' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-danger btn-lg">{% trans 'Désapprouver' %}</a>
                     {% endif %}
                         
-                    <a href="{% url 'core:delete' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-light-danger btn-lg">{% trans 'Delete' %}</a>
-                    <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-success btn-lg">{% trans 'Save' %}</button>
+                    <a href="{% url 'core:delete' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-light-danger btn-lg">{% trans 'Supprimer' %}</a>
+                    <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-success btn-lg">{% trans 'Sauvegarder' %}</button>
                 </div>
                 {% endwith %}
             </div>

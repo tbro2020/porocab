@@ -33,7 +33,7 @@ class Ride(Base):
     review = models.TextField(verbose_name=_('review'), blank=True, null=True, default=None)
 
     list_display = ('id', 'passenger', 'driver', 'cost', 'paid', 'status')
-    list_filter = ('status', )
+    list_filter = ('status', 'created_at')
     layout = Layout(
         Row(
             Column('passenger'),

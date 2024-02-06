@@ -1,8 +1,7 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.shortcuts import get_object_or_404
+from asgiref.sync import async_to_sync
 from service.models import Ride
-
-from asgiref.sync import async_to_sync, sync_to_async
 
 class RideConsumer(JsonWebsocketConsumer):
     def connect(self):
