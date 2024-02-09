@@ -1,20 +1,24 @@
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+from service.models import Ride, TypeOfVehicle
 from django.db.models import signals
 from django.dispatch import receiver
+from core.models import Preference
 from service.tasks import drivers
-from service.models import Ride
 
-
+from django.utils.text import slugify
 from django.conf import settings
 from djmoney.money import Money
 
-from core.models import Preference
-
 @receiver(signals.pre_save, sender=Ride)
 def pre_save_ride(sender, instance, **kwargs):
-    price = Preference.get('PRICE_PER_MINUTE')
+    price = Preference.get('PRICE_PER_MINUTE') or settings.PRICE_PER_MINUTE
+    prices = {
+        vehicle[0]: Preference.get(slugify(vehicle[0])) or price
+        for vehicle in TypeOfVehicle.choices
+    }
+    price = prices[instance.vehicle] or settings.PRICE_PER_MINUTE
     price = float(getattr(price, 'value', settings.PRICE_PER_MINUTE))
     
     price = instance.duration_in_minutes*price
