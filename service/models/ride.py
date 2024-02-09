@@ -16,6 +16,10 @@ class RideStatus(models.TextChoices):
     FAILED = 'failed', _('failed')
     ENDED = 'ended', _('ended')
 
+class TypeOfVehicle(models.TextChoices):
+    VOITURE = 'voiture', 'voiture'
+    MINIBUS = 'mini-bus', 'mini-bus'
+    JEEP = 'jeep 4x4', 'jeep 4x4'
 
 class Ride(Base):
     driver = ModelSelect('core.user', verbose_name=_('chauffeur'), on_delete=models.SET_NULL, null=True, default=None, related_name='%(app_label)s_%(class)s_driver')
@@ -25,6 +29,7 @@ class Ride(Base):
     pick_up_address = models.CharField(_('nom du lieu de ramassage'), max_length=255)
     pick_up_location = PointField(_('lieu de ramassage'), null=True)
 
+    vehicle = models.CharField(_('vehicule'), max_length=100, choices=TypeOfVehicle.choices, default='voiture')
     duration_in_minutes = models.PositiveIntegerField(verbose_name=_('duration'), default=0)
     cost = MoneyField(max_digits=14, decimal_places=2, default=0)
     paid = MoneyField(max_digits=14, decimal_places=2, default=0)
