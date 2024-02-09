@@ -18,7 +18,7 @@ class Preference(Base):
     
     @staticmethod
     def get(key):
-        return key
+        return Preference.objects.filter(key=key).first()
 
     class Meta:
         verbose_name = _('préférence')
