@@ -37,7 +37,7 @@ class Ride(Base):
     rating = models.PositiveIntegerField(verbose_name=_('rating'), default=0)
     review = models.TextField(verbose_name=_('review'), blank=True, null=True, default=None)
 
-    list_display = ('id', 'passenger', 'driver', 'cost', 'paid', 'status')
+    list_display = ('id', 'passenger', 'driver', 'cost', 'paid', 'status', 'created_at')
     list_filter = ('status', 'created_at')
     layout = Layout(
         Row(
