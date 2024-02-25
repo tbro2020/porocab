@@ -5,46 +5,10 @@
 
 {% block content %}
 {% get_current_language as LANGUAGE_CODE %}
-<script src="{% static 'assets/extensions/apexcharts/apexcharts.min.js' %}"></script>
-
-<div class="page-heading">
 
 <div class="page-content">
     <section>
         <h1>{% trans 'Tableau de bord' %}</h1>
-
-        <div class="col mt-3" style="height: 300px;">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="card-title">
-                        <h5>{% trans 'Vos chauffeurs' %}</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class='col mt-4'>
-            <div class="col-6 col-lg-4 col-md-6">
-                <div class="card">
-                    <div class="card-body px-4 py-4-5">
-                        <div class="row">
-                            <div class="col-md-4 col-lg-12 col-xl-12 col-xxl-5 d-flex justify-content-start ">
-                                <div class="stats-icon blue mb-2">
-                                    <i class="bi bi-icon"></i>
-                                </div>
-                            </div>
-                            <div class="col-md-8 col-lg-12 col-xl-12 col-xxl-7">
-                                <h6 class="text-muted font-semibold">
-                                    <a href="#" class="text-decoration-none">Accepted</a>
-                                </h6>
-                                <h6 class="font-extrabold mb-0">10</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </section>
 </div>
 {% endblock %}

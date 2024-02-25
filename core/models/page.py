@@ -26,7 +26,7 @@ class Page(Base):
         ),
         'authentication_required'
     )
-    list_display = ('id', 'title', 'created_by')
+    list_display = ('id', 'title')
 
     @property
     def name(self):
