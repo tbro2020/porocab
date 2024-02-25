@@ -8,7 +8,7 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <title>{{ organization.name|default:'PayDay' }}</title>
+      <title>{{ organization.name|default:'PoroCab' }}</title>
       <link rel="stylesheet" href="{% static 'assets/css/main/app.css' %}">
       <link rel="stylesheet" href="{% static 'assets/css/main/app-dark.css' %}">
       <link rel="shortcut icon" href="{% static 'assets/images/logo/favicon.svg' %}" type="image/x-icon">
@@ -29,7 +29,7 @@
                   <div class="d-flex justify-content-between align-items-center">
                      <div class="logo">
                         {% static 'assets/images/logo/logo.png' as logo %}
-                        <a href="#"><img style="height: 6rem !important;" src="{{ organization.logo.url|default:logo }}" alt="{{ organization.name|default:'payday' }}"></a>
+                        <a href="#"><img style="height: 6rem !important;" src="{{ organization.logo.url|default:logo }}" alt="{{ organization.name|default:'PoroCab' }}"></a>
                      </div>
                      <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20" height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
@@ -141,7 +141,7 @@
             <footer>
                <div class="footer clearfix mb-0 text-muted">
                   <div class="float-start">
-                     <p>{% now 'Y' %} &copy; PayDay</p>
+                     <p>{% now 'Y' %} &copy; PoroCab</p>
                   </div>
                   <div class="float-end">
                      <p style="font-size: 9px">{% trans 'Crafted with' %} <span class="text-danger"><i class="bi bi-heart"></i></span></p>
