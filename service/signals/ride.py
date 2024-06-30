@@ -6,7 +6,7 @@ from django.db.models import signals
 from django.dispatch import receiver
 
 from service.utils import price_the_ride
-from service.tasks import drivers
+from service.tasks import drivers as drivers_task
 from service.models import Ride, Vehicle
 
 import onesignal
@@ -43,6 +43,4 @@ def post_save_ride(sender, instance, created, **kwargs):
             print(ex)
 
     if not created and instance.status != 'pending': return
-    drivers.delay(instance.id)
-        
-
+    drivers_task.delay(instance.id)
