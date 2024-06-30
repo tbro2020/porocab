@@ -13,8 +13,8 @@ import onesignal
 from onesignal.api import default_api
 
 # Replace with your OneSignal App ID and REST API key
-ONESIGNAL_APP_ID = 'MzZhZmNiYWYtMTdmYS00NTg3LThhZGYtM2I3YzJhYzNmNGYz'
-ONESIGNAL_REST_API_KEY = 'ZTA2NzliMzItMjMxMS00NzRkLTg0ODMtZGYyOTU4MTdlZGY1'
+ONESIGNAL_APP_ID = 'f70c0348-5416-4739-83e0-a435d49e21b8'
+ONESIGNAL_REST_API_KEY = 'MzZhZmNiYWYtMTdmYS00NTg3LThhZGYtM2I3YzJhYzNmNGYz'
 configuration = onesignal.Configuration(app_key = ONESIGNAL_APP_ID, user_key = ONESIGNAL_REST_API_KEY)
 
 
