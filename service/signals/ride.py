@@ -32,15 +32,14 @@ def post_save_ride(sender, instance, created, **kwargs):
     if created:
         busies = Ride.objects.filter(status__in=['accepted', 'started']).values_list('driver__id', flat=True)
         drivers = Vehicle.objects.exclude(driver__in=busies).values_list('driver__id', flat=True)
-        try:
-            with onesignal.ApiClient(configuration) as api_client:
-                default_api.DefaultApi(api_client).create_notification(Notification(
-                    app_id=ONESIGNAL_APP_ID,
-                    include_external_user_ids=drivers,
-                    template_id="3a16cf8e-5be1-4482-b7c1-bb4d3395b6d0"
-                ))
-        except Exception as ex:
-            print(ex)
+        with onesignal.ApiClient(configuration) as api_client:
+            notification = Notification(**{
+                'app_id': ONESIGNAL_APP_ID,
+                'include_external_user_ids': list(drivers),
+                'contents': {'en': 'New ride request'},
+                'headings': {'en': 'New ride request'}
+            })
+            default_api.DefaultApi(api_client).create_notification(notification)
 
     if not created and instance.status != 'pending': return
     drivers_task.delay(instance.id)
