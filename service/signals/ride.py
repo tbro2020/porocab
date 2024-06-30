@@ -43,8 +43,8 @@ def post_save_ride(sender, instance, created, **kwargs):
                     "filters": [
                         {"field": "tag", "key": "user_type", "relation": "=", "value": "driver"}
                     ],
-                    "contents": {"en": "New ride request"},
-                    "headings": {"en": "New ride request"}
+                    "contents": {"en": "Nouvelle demande de course"},
+                    "headings": {"en": "Nouvelle course poro"},
                 }
             )
         except Exception as e:
