@@ -14,7 +14,7 @@ class Vehicle(Base):
     vin = models.CharField(verbose_name=_('numéro d\'identification du véhicule'), max_length=100, blank=True, null=True, default=None)
     licence= models.CharField(verbose_name=_('plaque d\'immatriculation'), max_length=100)
 
-    list_display = ('id', 'driver', 'brand', 'model', 'color', 'licence')
+    list_display = ('id', 'driver', 'brand', 'model', 'color', 'licence', 'vin')
     list_filter = ('brand', 'model', 'color')
     layout = Layout(
         'driver',
