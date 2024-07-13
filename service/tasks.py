@@ -9,7 +9,7 @@ def drivers(pk):
     channel_layer = get_channel_layer()
     ride = Ride.objects.get(id=pk)
     room = 'drivers-of-kinshasa'
-    for _ in range(30):
+    for _ in range(10):
         if ride.status != RideStatus.PENDING:
             break
         async_to_sync(channel_layer.group_send)(room, {'type': 'broadcast', 'payload': ride.serialized})
