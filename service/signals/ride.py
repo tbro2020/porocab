@@ -31,6 +31,7 @@ def post_save_ride(sender, instance, created, **kwargs):
     if created:
         #busies = Ride.objects.filter(status__in=['accepted', 'started']).values_list('driver__id', flat=True)
         #drivers = Vehicle.objects.exclude(driver__in=busies).values_list('driver__id', flat=True)
+        
         try:
             requests.post(
                 "https://onesignal.com/api/v1/notifications",
@@ -48,8 +49,6 @@ def post_save_ride(sender, instance, created, **kwargs):
                     "headings": {"en": "Nouvelle course poro"},
                 }
             )
+            drivers_task.delay(instance.id)
         except Exception as e:
             print(e)
-            
-    if not created and instance.status != 'pending': return
-    drivers_task.delay(instance.id)
