@@ -18,7 +18,6 @@ ONESIGNAL_USER_KEY = 'MTljZDY0ZjAtZjdjZC00MDUxLWJiZGUtMTc4OWIzOTIwY2I3'
 
 @receiver(signals.pre_save, sender=Ride)
 def pre_save_ride(sender, instance, **kwargs):
-    # if instance.cost.amount > 0: return
     instance.cost = price_the_ride(instance.vehicle, instance.duration_in_minutes)
 
 @receiver(signals.post_save, sender=Ride)
