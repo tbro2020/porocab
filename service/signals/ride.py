@@ -1,11 +1,21 @@
 from django.db.models import signals
 from django.dispatch import receiver
+from django.conf import settings
 
 from service.tasks.new_ride import broadcast_new_ride_to_driver
 from service.utils import price_the_ride
 from service.models import Ride
 import sentry_sdk
 import requests
+import pusher
+
+pusher_client = pusher.Pusher(**{
+    'app_id': settings.PUSHER_APP_ID,
+    'key': settings.PUSHER_KEY,
+    'secret': settings.PUSHER_SECRET,
+    'cluster': settings.PUSHER_CLUSTER,
+    'ssl': True
+})
 
 
 # Replace with your OneSignal App ID and REST API key
@@ -34,6 +44,8 @@ def pre_save_ride(sender, instance, **kwargs):
 
 @receiver(signals.post_save, sender=Ride)
 def post_save_ride(sender, instance, created, **kwargs):
+    users = [f'user:{user.id}' for user in [instance.passenger, instance.driver] if user]
+    pusher_client.trigger(users, 'ride', instance.serialized)
     if not created: return
     try:
         broadcast_new_ride_to_driver.delay(instance.id)
