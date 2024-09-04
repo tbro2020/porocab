@@ -1,10 +1,9 @@
 from functools import reduce
 
 from django.utils.translation import gettext as _
-from core.models import Menu, Approbation
 from core.models import Organization
 from django.urls import reverse_lazy
-from django.apps import apps
+from core.models import Menu
 
 
 

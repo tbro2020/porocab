@@ -20,8 +20,8 @@
             </h6>
         </div>
         <div class="col text-end">
-          <a href="{% url 'core:change' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-light-success btn-lg">{% trans 'Cancel' %}</a>
-          <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-danger btn-lg">{% trans 'Delete' %}</button>
+          <a href="{% url 'core:change' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-light-success">{% trans 'annuler' %}</a>
+          <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-danger">{% trans 'supprimer' %}</button>
         </div>
     </div>
 </div>

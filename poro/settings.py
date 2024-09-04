@@ -31,7 +31,6 @@ SECRET_KEY = os.getenv('SECRET_KEY', SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.getenv('DEBUG', 1))
-print('DEBUG:', DEBUG)
 
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = ['https://poro.kaditaj.com']
@@ -67,7 +66,6 @@ INSTALLED_APPS = [
 
     'djmoney',
     'qr_code',
-    'channels',
     'django_ace',
     'notifications',
     'phonenumber_field',
@@ -113,131 +111,169 @@ ASGI_APPLICATION = 'poro.asgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASES = {'default': None}
+DATABASE_URL = 'spatialite:///db.sqlite3'
+TEST = {'NAME': DATABASE_URL}
+DATABASE_URL = os.getenv('DATABASE_URL', default=DATABASE_URL)
+DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
+
+print(DATABASE_URL)
+CONN_MAX_AGE = int(os.getenv('CONN_MAX_AGE', 0))
+DATABASES['default']['CONN_MAX_AGE'] = CONN_MAX_AGE
+DATABASES['default']['TEST'] = TEST
+
+# Redis settings
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+
+print(REDIS_URL)
+
+# Cache settings default memory and redis cache
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": REDIS_URL,
     }
 }
 
-if os.getenv('DATABASE_URL', None):
-    DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
-    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-
-# Spatial settings
-#SPATIALITE_LIBRARY_PATH = 'mod_spatialite.so'
-#SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
-SPATIALITE_LIBRARY_PATH = 'mod_spatialite'
-
-print('DATABASES:', DATABASES.get('default', {}).get('ENGINE'))
+# Default user model and authentication
+LOGIN_URL = os.getenv("LOGIN_URL", 'login')
+AUTH_USER_MODEL = os.getenv("AUTH_USER_MODEL", 'core.user')
+LOGOUT_REDIRECT_URL = os.getenv("LOGOUT_REDIRECT_URL", 'login')
+LOGIN_REDIRECT_URL = os.getenv("LOGIN_REDIRECT_URL", 'core:home')
 
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'fr'
+LANGUAGE_CODE = "fr"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
 USE_TZ = True
 
-print('LANGUAGE_CODE:', LANGUAGE_CODE)
-
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_URL = os.getenv("STATIC_URL", STATIC_URL)
-STATICFILES_DIRS =[os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS =[os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.getenv("STATIC_ROOT", STATIC_URL.replace('/', ''))
+
+AWS_LOCATION = os.getenv('AWS_LOCATION', default='')
+AWS_DEFAULT_ACL = os.getenv('AWS_DEFAULT_ACL', default='public-read')
+AWS_QUERYSTRING_AUTH= os.getenv('AWS_QUERYSTRING_AUTH', default=False)
+
+AWS_S3_REGION = os.getenv('AWS_S3_REGION')
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')
+AWS_S3_CUSTOM_DOMAIN = os.getenv('AWS_S3_CUSTOM_DOMAIN')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = os.getenv('DEFAULT_FILE_STORAGE', default=DEFAULT_FILE_STORAGE)
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = os.getenv("STATICFILES_STORAGE", STATICFILES_STORAGE)
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = os.getenv("MEDIA_URL", 'media/')
+PUBLIC_MEDIA_LOCATION = os.getenv('PUBLIC_MEDIA_LOCATION', default='media')
 
-
-AWS_LOCATION = os.getenv("AWS_LOCATION")
-AWS_DEFAULT_ACL = os.getenv("AWS_DEFAULT_ACL")
-
-AWS_S3_REGION = os.getenv("AWS_S3_REGION")
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
-AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
-
-STATICFILES_STORAGE = os.getenv("STATICFILES_STORAGE", 'django.contrib.staticfiles.storage.StaticFilesStorage')
+AWS_S3_SECURE_URLS = False
+AWS_S3_URL_PROTOCOL = 'http:'
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Auth settings
-LOGIN_URL = os.getenv("LOGIN_URL", 'login')
-AUTH_USER_MODEL = os.getenv("AUTH_USER_MODEL", 'core.User')
-LOGOUT_REDIRECT_URL = os.getenv("LOGOUT_REDIRECT_URL", 'login')
-LOGIN_REDIRECT_URL = os.getenv("LOGIN_REDIRECT_URL", 'core:home')
-    
 # Email settings
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", EMAIL_BACKEND)
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", EMAIL_HOST_USER)
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
-
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", True)
-EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", False)
-
-# Celery settings
-CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", 'redis://127.0.0.1:6379')
-CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", 'redis://127.0.0.1:6379')
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_USE_TLS = bool(int(os.getenv('EMAIL_USE_TLS', 0)))
+EMAIL_USE_SSL = bool(int(os.getenv('EMAIL_USE_SSL', 0)))
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 1025)
 
 # Django Rest Framework settings
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ],
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
+    ),
 }
 
-# TinyMCE settings
+# Django Crispy Forms settings
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = ['bootstrap', 'bootstrap5', 'uni_form']
+
+# Django JSON Widget settings
+JSON_WIDGET_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.0.0/jsoneditor.min.css'
+JSON_WIDGET_JS = 'https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.0.0/jsoneditor.min.js'
+
+# Django Money settings
+DEFAULT_CURRENCY = 'CDF'
+CURRENCIES = ('USD', 'CDF')
+CURRENCY_CHOICES = [(currency, currency) for currency in CURRENCIES]
+
+# Django QR Code settings
+QR_CODE_FOREGROUND = 'black'
+QR_CODE_BACKGROUND = 'white'
+QR_CODE_MODULE_SIZE = 5
+QR_CODE_VERSION = 1
+QR_CODE_ERROR_CORRECTION = 'L'
+QR_CODE_IMAGE_FORMAT = 'PNG'
+QR_CODE_CACHE_TIMEOUT = 3600
+QR_CODE_CACHE_PREFIX = 'qr_code'
+
+# Django Ace settings
+ACE_DEFAULT_THEME = 'chrome'
+ACE_DEFAULT_MODE = 'python'
+ACE_DEFAULT_WIDTH = '100%'
+ACE_DEFAULT_HEIGHT = '300px'
+
+# Django Phonenumber Field settings
+PHONENUMBER_DB_FORMAT = 'E164'
+PHONENUMBER_DEFAULT_REGION = 'CD'
+
+# Django TinyMCE settings
 TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,
     'custom_undo_redo_levels': 20,
-    'selector': 'textarea',
     'theme': 'silver',
+    'height': '600',
     'plugins': '''
             textcolor save link image media preview codesample contextmenu
             table code lists fullscreen  insertdatetime  nonbreaking
@@ -257,193 +293,62 @@ TINYMCE_DEFAULT_CONFIG = {
             ''',
     'contextmenu': 'formats | link image',
     'menubar': True,
-    'statusbar': True,
+    'statusbar': True
 }
 
-# Django Crispy Forms settings
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+# Django Select2 settings
+SELECT2_JS = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js'
+SELECT2_CSS = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css'
+SELECT2_I18N = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/i18n/fr.js'
 
-# Django Widget Tweaks settings
-WIDGET_TWEAKS = {
-    'error_class': 'is-invalid',
-    'required_class': 'required',
-    'form_group_class': 'mb-3',
+# Django Math Filters settings
+MATHJAX = {
+    'url': 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+    'config': 'TeX-AMS_HTML',
+    'TeX': {'extensions': ['AMSmath.js', 'AMSsymbols.js']},
 }
 
-# Django Ace settings
-ACE_THEME = 'chrome'
-ACE_MODES = [('python', 'Python')]
+# Django Filters settings
+FILTERS_HELP_TEXT_FILTER = False
+FILTERS_HELP_TEXT_EXCLUDE = False
 
-# Django Notifications settings
-NOTIFICATIONS_SOFT_DELETE = True
-NOTIFICATIONS_USE_JSONFIELD = True
-NOTIFICATIONS_JSONFIELD_ENCODING = 'json'
-NOTIFICATIONS_CONFIG = {
-    'SOFT_DELETE': True,
-    'USE_JSONFIELD': True,
-    'JSONFIELD_ENCODING': 'json',
-}
+# Django Debug Toolbar settings
+INTERNAL_IPS = [
+    'localhost',
+]
 
-# Django Phonenumber Field settings
-PHONENUMBER_DB_FORMAT = 'NATIONAL'
-PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
-PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
-
-PHONENUMBER_DEFAULT_REGION = 'CD'
-PHONENUMBER_DEFAULT_FORMAT = 'E164'
-PHONENUMBER_DEFAULT_FORMAT = 'RFC3966'
-
-# Django channels settings
-REDIS_URL="rediss://default:AVNS_AsvnCXrx0trHw_5YSIj@poro-cab-redis-do-user-10254761-0.c.db.ondigitalocean.com:25061"
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [(os.getenv("REDIS_URL", REDIS_URL))]
-        },
-    },
-}
-print(os.getenv("REDIS_URL", REDIS_URL))
-
-# DEBUG MODE
-if DEBUG:
-    INTERNAL_IPS = ['127.0.0.1', 'localhost']
-    INSTALLED_APPS+=['debug_toolbar', 'django_extensions']
-    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+# Django Celery settings
+CELERY_RESULT_EXTENDED = True
+CELERY_CACHE_BACKEND='django-cache'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', REDIS_URL)
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', REDIS_URL)
+CELERY_BROKER_TRANSPORT_URL=os.getenv('CELERY_BROKER_TRANSPORT_URL', REDIS_URL)
 
 
-# PRODUCTION MODE
-if not DEBUG:
-    INSTALLED_APPS.append('corsheaders')
+# Sentry settings
+SENTRY_DSN = "https://61630e2ac1f3c024ffa6a3d4a7207f57@o4505861077204992.ingest.us.sentry.io/4507582424612864"
+SENTRY_DSN = os.getenv("SENTRY_DSN", SENTRY_DSN)
 
-    INDEX_OF_COMMON_MIDDLEWARE = MIDDLEWARE.index('django.middleware.common.CommonMiddleware')
-    MIDDLEWARE.insert(INDEX_OF_COMMON_MIDDLEWARE, 'corsheaders.middleware.CorsMiddleware')
+import sentry_sdk
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    traces_sample_rate=1.0,
+    profiles_sample_rate=1.0,
+)
 
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 3600
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_REFERRER_POLICY = 'same-origin'
+# cors header
+CORS_ALLOW_ALL_ORIGINS = True
 
-    # Security settings
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = 'DENY'
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_SSL_HOST = True
+# Twilio
+TWILIO_ACCOUNT_SID = "ACc431c38e47547dcde29a80c137d01d49"
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", TWILIO_ACCOUNT_SID)
 
-    # CORS settings
-    CORS_ORIGIN_ALLOW_ALL = True
-    CORS_ALLOW_CREDENTIALS = True
-    CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
-    CORS_ORIGIN_WHITELIST = os.getenv("CORS_ORIGIN_WHITELIST", '*').split(',')
+TWILIO_AUTH_TOKEN = "9cebe9ef8fbff9f59f2e9508cf91d77a"
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", TWILIO_AUTH_TOKEN)
 
-    # Monitoring settings
-    import json
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    SENTRY_DSN = os.getenv("SENTRY_DSN")
-    SENTRY_ENVIRONMENT = os.getenv("SENTRY_ENVIRONMENT", 'production')
-    SENTRY_RELEASE = os.getenv("SENTRY_RELEASE", '1.0.0')
-    SENTRY_TRACES_SAMPLE_RATE = os.getenv("SENTRY_TRACES_SAMPLE_RATE", 0.5)
-    SENTRY_TRACES_SAMPLE_RATE = float(SENTRY_TRACES_SAMPLE_RATE)
-    SENTRY_TRACE_SAMPLING = os.getenv("SENTRY_TRACE_SAMPLING", 0.5)
-    SENTRY_TRACE_SAMPLING = float(SENTRY_TRACE_SAMPLING)
-    SENTRY_TRANSPORT = os.getenv("SENTRY_TRANSPORT", 'sentry_sdk.transport.HttpTransport')
-    SENTRY_TRANSPORT_OPTIONS = os.getenv("SENTRY_TRANSPORT_OPTIONS", '{}')
-    SENTRY_TRANSPORT_OPTIONS = json.loads(SENTRY_TRANSPORT_OPTIONS)
-
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        environment=SENTRY_ENVIRONMENT,
-        release=SENTRY_RELEASE,
-        traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
-        trace_sampling=SENTRY_TRACE_SAMPLING,
-        transport=SENTRY_TRANSPORT,
-        transport_options=SENTRY_TRANSPORT_OPTIONS,
-        integrations=[DjangoIntegration()],
-    )
-
-    # Logging settings
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'root': {
-            'level': 'WARNING',
-            'handlers': ['sentry'],
-        },
-        'formatters': {
-            'verbose': {
-                'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-            },
-            'simple': {
-                'format': '%(levelname)s %(message)s'
-            },
-        },
-        'handlers': {
-            'sentry': {
-                'level': 'WARNING',
-                'class': 'sentry_sdk.integrations.logging.EventHandler',
-                'formatter': 'verbose',
-            },
-            'console': {
-                'level': 'WARNING',
-                'class': 'logging.StreamHandler',
-                'formatter': 'simple'
-            },
-        },
-        'loggers': {
-            'django': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'django.server': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'django.security': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'django.request': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'django.db.backends': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'sentry_sdk': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'sentry_sdk.errors': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'sentry_sdk.integrations': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-            'sentry_sdk.transport': {
-                'level': 'WARNING',
-                'handlers': ['console'],
-                'propagate': False,
-            },
-        },
-    }
+TWILIO_NUMBER = '+18454425618'
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_NUMBER", TWILIO_NUMBER)
 
 # Django money settings
 DEFAULT_CURRENCY = 'CDF'
@@ -457,8 +362,19 @@ CURRENCY_CHOICES = [
 PRICE_PER_MINUTE = 350
 PRICE_PER_MINUTE = int(os.getenv('PRICE_PER_MINUTE', PRICE_PER_MINUTE))
 
+# Pusher
+PUSHER_APP_ID = "1859491"
+PUSHER_APP_ID = os.getenv("PUSHER_APP_ID", PUSHER_APP_ID)
 
-# Twilio
-TWILIO_ACCOUNT_SID = 'ACc431c38e47547dcde29a80c137d01d49'
-TWILIO_AUTH_TOKEN = '9cebe9ef8fbff9f59f2e9508cf91d77a'
-TWILIO_NUMBER = '+18454425618'
+PUSHER_KEY = "9138802923b81e76c23e"
+PUSHER_KEY = os.getenv("PUSHER_KEY", PUSHER_KEY)
+
+PUSHER_SECRET = "da2991514e6fc789d89f"
+PUSHER_KEY = os.getenv("PUSHER_KEY", PUSHER_KEY)
+
+PUSHER_CLUSTER = "eu"
+PUSHER_CLUSTER = os.getenv("PUSHER_CLUSTER", PUSHER_CLUSTER)
+
+# Google maps
+GOOGLE_MAPS_KEY = "AIzaSyDrFA2bJ9smy10MklhW33q4r7Tn8AMCKk8"
+GOOGLE_MAPS_KEY = os.getenv("GOOGLE_MAPS_KEY", GOOGLE_MAPS_KEY)

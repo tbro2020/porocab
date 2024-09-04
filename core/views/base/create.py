@@ -11,10 +11,6 @@ from crispy_forms.layout import Layout
 from django.apps import apps
 from .base import BaseView
 
-from core.models import Approbation
-from core.models import Flow
-
-
 class Create(BaseView):
     next = None
     action = ["add"]
@@ -53,17 +49,6 @@ class Create(BaseView):
             return render(request, self.template_name, locals())
         form.save()
 
-        # Add approvers
-        flow = Flow.objects.filter(content_type__model=model._meta.model_name).first()
-        flow = flow.steps.values_list('user', flat=True).distinct() if flow else []
-        if approvers := form.cleaned_data.get('approvers', flow):
-            approvers = [Approbation(
-                content_type=ContentType.objects.get_for_model(model), 
-                object_id=form.instance.id, 
-                user_id=getattr(approver, 'id', approver)) for approver in approvers
-            ]
-            Approbation.objects.bulk_create(approvers)
-
         for formset in formsets:
             qs = formset.save(commit=False)
             for obj in qs:
@@ -71,7 +56,6 @@ class Create(BaseView):
                 obj.save()
 
         self.log(model, form, action=ADDITION, formsets=formsets)
-        self.notify_approvers(model, form.instance)
         
         messages.add_message(request, messages.SUCCESS, message=_('Le {model} a été créé avec succès').format(**{'model': model._meta.model_name}))
         next = request.GET.dict().get('next', reverse_lazy('core:list', kwargs={'app': app, 'model': model._meta.model_name}))

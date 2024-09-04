@@ -10,7 +10,6 @@ from django.apps import apps
 from core.forms import modelform_factory, InlineFormSetHelper
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.admin.models import CHANGE
-from core.models import Approbation
 from .base import BaseView
 
 
@@ -27,9 +26,8 @@ class Change(BaseView):
         fields = getattr(model, 'layout', '__all__')
         fields = [field.name for field in fields.get_field_names()] if isinstance(fields, Layout) else fields
         
-        initial = {'approvers': [approver.user for approver in self.approbations()]}
         form = modelform_factory(model, fields=fields)
-        form = form(instance=obj, initial=initial)
+        form = form(instance=obj)
 
         formsets = [apps.get_model(inline.split('.')[0], model_name=inline.split('.')[-1]) for inline in getattr(model, 'inlines', [])]
         formsets = [inlineformset_factory(model, inline, fields=getattr(inline, 'inline_form_fields', '__all__'), can_delete=False, extra=1) for inline in formsets]
@@ -56,9 +54,8 @@ class Change(BaseView):
         fields = getattr(model, 'layout', '__all__')
         fields = [field.name for field in fields.get_field_names()] if isinstance(fields, Layout) else fields
         
-        initial = {'approvers': [approver.user for approver in self.approbations()]}
         form = modelform_factory(model, fields=fields)
-        form = form(request.POST or None, request.FILES or None, instance=obj, initial=initial)
+        form = form(request.POST or None, request.FILES or None, instance=obj)
 
         formsets = [apps.get_model(inline.split('.')[0], model_name=inline.split('.')[-1]) for inline in getattr(model, 'inlines', [])]
         formsets = [inlineformset_factory(model, inline, fields=getattr(inline, 'inline_form_fields', '__all__'), can_delete=True, extra=1) for inline in formsets]
@@ -70,11 +67,6 @@ class Change(BaseView):
 
         form.save()
         [formset.save() for formset in formsets]
-
-        if approvers := form.cleaned_data.get('approvers'):
-            approvers = [Approbation(content_type=ContentType.objects.get_for_model(model), object_id=form.instance.id, user=approver) for approver in approvers]
-            self.approbations().delete()
-            Approbation.objects.bulk_create(approvers)
 
         self.log(model, form, action=CHANGE, formsets=formsets)
         messages.add_message(request, messages.SUCCESS,  message=_('Le {model} #{pk} a été mis à jour avec succès').format(**{'model': model._meta.model_name, 'pk': pk}))

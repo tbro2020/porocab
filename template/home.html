@@ -6,9 +6,91 @@
 {% block content %}
 {% get_current_language as LANGUAGE_CODE %}
 
+<style>
+    /* Set the size of the map container */
+    #map {
+        height: 450px;
+    }
+</style>
+
 <div class="page-content">
     <section>
-        <h1>{% trans 'Tableau de bord' %}</h1>
+        <h1>{% trans 'Tableau de bord' %} ({% now 'M' %})</h1>
     </section>
+
+    <div class="row">
+        {% for ride in rides %}
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="badge text-bg-primary">{{ ride.status }}</h2>
+                    <h3>{{ ride.paid }}<small class="text-muted">/{{ ride.cost }}</small></h3>
+                    <h5>CDF</h5>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col text-center">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="m-0 p-0">Aucun course(s)</h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="col p-0 rounded">
+        <div class="card p-0 rounded">
+            <div class="card-body p-0 rounded">
+                <div class="col p-0 rounded" id="map"></div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ settings.GOOGLE_MAPS_KEY }}&callback=initMap" async defer></script>
+
+<script>
+    // Enable pusher logging - don't include this in production
+    let map;
+    const markers = {};
+    Pusher.logToConsole = true;
+    const customIcon = 'https://maps.google.com/mapfiles/kml/shapes/cabs.png';
+
+    var pusher = new Pusher("{{ settings.PUSHER_KEY }}", {
+      cluster: '{{ settings.PUSHER_CLUSTER }}'
+    });
+
+    var channel = pusher.subscribe('drivers');
+    channel.bind('location', function(data) {
+        const markerKey = data.id;
+        const newLocation = { lat: data.lat, lng: data.lng };
+
+        // If the marker already exists, update its position
+        if (markers[markerKey]) {
+            markers[markerKey].setPosition(newLocation);
+        } else {
+            // If the marker does not exist, create a new one
+            markers[markerKey] = new google.maps.Marker({position: newLocation, icon: customIcon, map: map, title: `Marker for ${markerKey}`});
+        }
+        // Optionally, you can recenter the map on the updated marker
+        // map.setCenter(newLocation);
+    });
+
+    function initMap() {
+        // The location to center the map on
+        const center = { lat: -4.322447, lng: 15.307045 };
+
+        // The map, centered at myLocation
+        map = new google.maps.Map(document.getElementById("map"), {zoom: 14, center: center});
+
+        /* The marker, positioned at myLocation
+        const marker = new google.maps.Marker({
+            position: myLocation,
+            map: map,
+        }); */
+    }
+</script>
+
 {% endblock %}

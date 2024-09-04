@@ -7,12 +7,6 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-<style>
-    .select2-selection--single{
-        height: 40px !important;
-    }
-</style>
-
 <div class="page-heading">
     <div class="card">
         <div class="card-body">
@@ -22,21 +16,13 @@
                     {% include 'components/breadcrumb.html' %}
                 </div>
 
-                {% with approbations=self.approbations %}
+                
                 <div class="col text-end">
-                    {% if approbations.is_fully_approved %}
-                        <a target="_blank" href="{% url 'core:print' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-info btn-lg"><i class="bi bi-printer-fill"></i></a>
-                    {% endif %}
-
-                    {% if request.user.id in approbations.pending.users %}
-                        <a href="{% url 'core:approbation' 'approved' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-warning btn-lg">{% trans 'Approve' %}</a>
-                        <a href="{% url 'core:approbation' 'rejected' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-danger btn-lg">{% trans 'Désapprouver' %}</a>
-                    {% endif %}
-                        
-                    <a href="{% url 'core:delete' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-light-danger btn-lg">{% trans 'Supprimer' %}</a>
-                    <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-success btn-lg">{% trans 'Sauvegarder' %}</button>
+                    <div class="btn-group">
+                        <a href="{% url 'core:delete' app model|getattr:'_meta'|getattr:'model_name' obj.pk %}" class="btn btn-light-danger">{% trans 'Supprimer' %}</a>
+                        <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-success">{% trans 'Sauvegarder' %}</button>
+                    </div>
                 </div>
-                {% endwith %}
             </div>
         </div>
     </div>
@@ -45,11 +31,13 @@
 <div class="page-content">
     
     <section>
+        {% if self.approbations %}
         <div class="card">
             <div class="card-body">
                 {% include 'components/timeline.html' %}
             </div>
         </div>
+        {% endif %}
         
         <div class="card">
             <div class="card-body">
@@ -71,7 +59,6 @@
                     <li>{{ activity }}</li>
                 {% endfor %}
             </ul>
-
         </div>
     </div>
 </div>

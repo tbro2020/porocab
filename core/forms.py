@@ -4,14 +4,8 @@ from dal.autocomplete import ListSelect2
 from crispy_forms.helper import FormHelper
 from django import forms
 
-from django.urls import reverse_lazy
-from dal import autocomplete
-
 from django.contrib.auth import get_user_model
-from core.models import Flow
-
-approvers_widget = autocomplete.ModelSelect2Multiple(url=reverse_lazy('api:autocomplete', kwargs={'to_field': 'pk', 'app': get_user_model()._meta.app_label, 'model': get_user_model()._meta.model_name}))
-approvers = forms.ModelMultipleChoiceField(queryset=get_user_model().objects.all(), widget=approvers_widget)
+from django.urls import reverse_lazy
 
 class InlineForm(forms.Form):
     class Meta:
@@ -38,9 +32,6 @@ def form_factory(model, fields):
     return type(class_name, (forms.Form,), fields)
 
 def modelform_factory(model, fields):
-    flow = Flow.objects.filter(content_type__model=model._meta.model_name)
-    if flow.exists(): fields.remove('approvers') if 'approvers' else fields.insert(0, 'approvers')
-    
     attrs = {'model': model}
     if fields: attrs['fields'] = fields
 
@@ -50,13 +41,6 @@ def modelform_factory(model, fields):
     attrs = {'Meta': Meta}
     helper = FormHelper()
     helper.layout = getattr(model, 'layout', None)
-
-    if flow:
-        if 'approvers' in attrs: del attrs['approvers']
-        helper.layout = getattr(model, '_layout', None)
-    elif 'approvers' in getattr(model, 'layout', None).fields:
-        attrs['approvers'] = approvers
-        helper.layout = getattr(model, 'layout', None)
             
     attrs['helper'] = helper
     class_name = str("%sModelForm" % model._meta.object_name)

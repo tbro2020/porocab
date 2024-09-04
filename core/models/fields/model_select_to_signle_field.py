@@ -11,5 +11,8 @@ class ModelSelect2Single(models.OneToOneField):
             'to_field': to_field,
             'app': self.remote_field.model._meta.app_label,
             'model': self.remote_field.model._meta.model_name
-        }))
+        }), attrs = {
+            'data-minimum-input-length': 2,
+            'data-theme': 'bootstrap-5'
+        })
         return super().formfield(**kwargs)

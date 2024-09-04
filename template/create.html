@@ -7,24 +7,19 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-<style>
-    .select2-selection--single{
-        height: 40px !important;
-    }
-</style>
 
 <div class="page-heading">
     <div class="card">
         <div class="card-body">
             <div class="row">
                 <div class="col text-start">
-                    <h3 class="m-0">{% trans 'Create' %} {{ model|getattr:'_meta'|getattr:'verbose_name'|title }}</h3>
+                    <h3 class="m-0">{% trans 'Creer' %} {{ model|getattr:'_meta'|getattr:'verbose_name' }}</h3>
                     {% include 'components/breadcrumb.html' %}
                 </div>
 
                 <div class="col text-end">
-                    <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}" class="btn btn-light-danger btn-lg">{% trans 'Annuler' %}</a>
-                    <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-success btn-lg">{% trans 'Sauvegarder' %}</button>
+                    <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}" class="btn btn-light-danger">{% trans 'Annuler' %}</a>
+                    <button type="submit" form="form-{{ model|getattr:'_meta'|getattr:'model_name' }}" class="btn btn-light-success">{% trans 'Sauvegarder' %}</button>
                 </div>
             </div>
         </div>

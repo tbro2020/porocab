@@ -1,9 +1,9 @@
+from core.models.fields import ModelSelect, ChoiceField
 from api.serializers import model_serializer_factory
 from django.contrib.gis.db.models import PointField
 from crispy_forms.layout import Layout, Row, Column
 from django.utils.translation import gettext as _
 from djmoney.models.fields import MoneyField
-from core.models.fields import ModelSelect
 from django.db import models
 from core.models import Base
 
@@ -24,7 +24,7 @@ class TypeOfVehicle(models.TextChoices):
 class Ride(Base):
     driver = ModelSelect('core.user', verbose_name=_('chauffeur'), on_delete=models.SET_NULL, null=True, default=None, related_name='%(app_label)s_%(class)s_driver')
     passenger = ModelSelect('core.user', verbose_name=_('passenger'), on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_passenger')
-    status = models.CharField(verbose_name=_('status'), max_length=20, default=RideStatus.PENDING, choices=RideStatus.choices)
+    status = ChoiceField(verbose_name=_('status'), max_length=20, default=RideStatus.PENDING, choices=RideStatus.choices)
 
     pick_up_address = models.CharField(_('nom du lieu de ramassage'), max_length=255)
     pick_up_location = PointField(_('lieu de ramassage'), null=True)

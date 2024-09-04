@@ -8,7 +8,6 @@ from django.contrib.admin.models import LogEntry
 
 from django.utils.encoding import force_str
 from notifications.signals import notify
-from core.models import Approbation
 from django.apps import apps
 
 class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -16,10 +15,6 @@ class BaseView(LoginRequiredMixin, PermissionRequiredMixin, View):
         data = self.kwargs
         if 'app' not in data or 'model' not in data: return []
         return [f"{data.get('app')}.{i}_{data.get('model')}" for i in self.action]
-    
-    def approbations(self):
-        model = apps.get_model(self.kwargs.get('app'), model_name=self.kwargs.get('model'))
-        return Approbation.objects.for_model(model).filter(object_id=self.kwargs.get('pk'))
     
     def activities(self):
         pk = self.kwargs.get('pk')

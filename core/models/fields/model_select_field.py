@@ -4,6 +4,9 @@ from dal import autocomplete
 
 
 class ModelSelect(models.ForeignKey):
+    on_delete = models.SET_NULL
+    null = True
+    
     def formfield(self, **kwargs):
         to_field = getattr(self, 'foreign_related_fields', None)
         to_field = to_field[0].name if to_field else 'pk'
@@ -11,5 +14,8 @@ class ModelSelect(models.ForeignKey):
             'to_field': to_field,
             'app': self.remote_field.model._meta.app_label,
             'model': self.remote_field.model._meta.model_name
-        }))
+        }), attrs = {
+            'data-minimum-input-length': 2,
+            'data-theme': 'bootstrap-5'
+        })
         return super().formfield(**kwargs)

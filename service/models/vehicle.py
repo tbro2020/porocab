@@ -1,3 +1,4 @@
+from django.contrib.gis.db.models import PointField
 from crispy_forms.layout import Layout, Row, Column
 from django.utils.translation import gettext as _
 from core.models.fields import ModelSelect
@@ -6,18 +7,22 @@ from core.models import Base
 
 class Vehicle(Base):
     driver = ModelSelect('core.user', verbose_name=_('chauffeur'), on_delete=models.CASCADE, related_name='%(app_label)s_%(class)s_driver')
-
-    brand = models.CharField(verbose_name=_('marque'), max_length=100)
-    model = models.CharField(verbose_name=_('modèle'), max_length=100)
-    color = models.CharField(verbose_name=_('couleur'), max_length=100)
+    last_know_location = PointField(_('dernier lieu connu'), null=True)
     
+    color = models.CharField(verbose_name=_('couleur'), max_length=100)
+    model = models.CharField(verbose_name=_('modèle'), max_length=100)
+    brand = models.CharField(verbose_name=_('marque'), max_length=100)
+
     vin = models.CharField(verbose_name=_('numéro d\'identification du véhicule'), max_length=100, blank=True, null=True, default=None)
     licence= models.CharField(verbose_name=_('plaque d\'immatriculation'), max_length=100)
 
     list_display = ('id', 'driver', 'brand', 'model', 'color', 'licence', 'vin')
     list_filter = ('brand', 'model', 'color')
     layout = Layout(
-        'driver',
+        Row(
+            Column('driver'),
+            Column('last_know_location')
+        ),
         Row(
             Column('brand'),
             Column('model'),

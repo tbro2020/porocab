@@ -24,13 +24,11 @@ urlpatterns = [
     path('modal/delete/<str:app>/<str:model>/<int:pk>', DeleteModal.as_view(), name='delete-modal'),
     
     path('action/required', ActionRequired.as_view(), name='action-required'),
-    path('approbation/<str:action>/<str:app>/<str:model>/<int:pk>', Approbation.as_view(), name='approbation'),
     
     path('notifications', Notifications.as_view(), name='notifications'),
     path('notification/<int:pk>', Notification.as_view(), name='notification'),
     path('print/<str:app>/<str:model>/<int:pk>', Print.as_view(), name='print'),
-
-    path('flow/<int:pk>', Flow.as_view(), name='flow'),
+    path('exporter/<str:app>/<str:model>', Exporter.as_view(), name='exporter'),
     
     #path('template/import/<str:app>/<str:model>', Template.as_view(), name='template'),
     #path('approve/<str:app>/<str:model>/<int:pk>', Approve.as_view(), name='approve'),
