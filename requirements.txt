@@ -48,6 +48,7 @@ django-notifications-hq==1.8.3
 django-phonenumber-field==7.2.0
 django-qr-code==3.1.1
 django-redis==5.4.0
+django-storages==1.14.4
 django-timezone-field==6.0.1
 django-tinymce==3.6.1
 django-uw-keycloak==2.0.2
