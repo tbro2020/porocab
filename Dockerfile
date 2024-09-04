@@ -25,4 +25,4 @@ COPY .env /app/.env
 # RUN python manage.py collectstatic --noinput
 
 # Run migrations and start the Django application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "payday.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "poro.wsgi:application"]
