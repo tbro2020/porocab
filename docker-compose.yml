@@ -30,7 +30,7 @@ services:
       - .env.worker
 
   db:
-    image: postgis/postgis::latest
+    image: postgis/postgis:latest
     restart: unless-stopped
     container_name: pay_base
     ports:
