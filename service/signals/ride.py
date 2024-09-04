@@ -17,11 +17,10 @@ pusher_client = pusher.Pusher(**{
     'ssl': True
 })
 
-
 # Replace with your OneSignal App ID and REST API key
-ONESIGNAL_APP_ID = 'f70c0348-5416-4739-83e0-a435d49e21b8'
 ONESIGNAL_REST_API_KEY = 'MzZhZmNiYWYtMTdmYS00NTg3LThhZGYtM2I3YzJhYzNmNGYz'
 ONESIGNAL_USER_KEY = 'MTljZDY0ZjAtZjdjZC00MDUxLWJiZGUtMTc4OWIzOTIwY2I3'
+ONESIGNAL_APP_ID = 'f70c0348-5416-4739-83e0-a435d49e21b8'
 
 ONE_SIGNAL_HEADERS = {
     "Authorization": f"Basic {ONESIGNAL_REST_API_KEY}",
