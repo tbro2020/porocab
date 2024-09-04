@@ -43,7 +43,7 @@ def pre_save_ride(sender, instance, **kwargs):
 
 @receiver(signals.post_save, sender=Ride)
 def post_save_ride(sender, instance, created, **kwargs):
-    users = [f'user:{user.id}' for user in [instance.passenger, instance.driver] if user]
+    users = [f'user-{user.id}' for user in [instance.passenger, instance.driver] if user]
     pusher_client.trigger(users, 'ride', instance.serialized)
     if not created: return
     try:

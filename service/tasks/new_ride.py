@@ -25,7 +25,7 @@ def broadcast_new_ride_to_driver(ride_pk):
         if not drivers or ride.status != RideStatus.PENDING : break
         _drivers = drivers.values_list('driver', flat=True)
 
-        pusher_client.trigger([f'user:{driver}' for driver in _drivers], event_name, ride.serialized)
+        pusher_client.trigger([f'user-{driver}' for driver in _drivers], event_name, ride.serialized)
         drivers = drivers.all()
         ride.refresh_from_db()
         time.sleep(5)
