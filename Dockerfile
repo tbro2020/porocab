@@ -10,6 +10,12 @@ WORKDIR /app
 
 # Install dependencies
 COPY requirements.txt /app/
+RUN apt-get update \
+    && apt-get install -y binutils libproj-dev gdal-bin \
+    && apt-get install -y proj-bin \
+    && apt-get install -y gdal-bin \
+    && apt-get install -y libgdal-dev \
+    && apt-get install -y git
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Install Gunicorn
