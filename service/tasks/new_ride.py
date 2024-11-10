@@ -16,7 +16,7 @@ pusher_client = pusher.Pusher(**{
 
 @shared_task
 def broadcast_new_ride_to_driver(ride_pk):
-    waiting_time = 5
+    wait_for = 5
     current, max = 0, 5
     event_name = 'ride'
 
@@ -29,12 +29,13 @@ def broadcast_new_ride_to_driver(ride_pk):
         _drivers = drivers.values_list('driver', flat=True)
 
         pusher_client.trigger([f'user-{driver}' for driver in _drivers], event_name, ride.serialized)
+        ride = Ride.objects.get(pk=ride_pk)
         drivers = drivers.all()
-        ride.refresh_from_db()
-        time.sleep(waiting_time)
+        time.sleep(wait_for)
         current += 1
         
-    # update ride status to end the broadcasting
-    ride.status = RideStatus.CANCELLED
-    ride.save()
+    if ride.status == RideStatus.PENDING:
+        # update ride status to end the broadcasting
+        ride.status = RideStatus.CANCELLED
+        ride.save()
         
